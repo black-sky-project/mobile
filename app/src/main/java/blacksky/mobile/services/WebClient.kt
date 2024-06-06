@@ -6,6 +6,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
@@ -49,11 +50,21 @@ object WebClient {
 
     suspend fun getDepartments() = getList<DepartmentDto>("$BASE_URL/departments/get/list")
 
-    private suspend fun <T> getList(url: String) = scope.async {
+    private suspend inline fun <reified T: Any> getList(url: String) = scope.async {
         val request = Request.Builder().url(url).addHeader("Token", TOKEN).build()
         client.newCall(request).execute().use { response ->
             if (response.isSuccessful.not()) throw IOException("Request failed: $response")
             response.body?.string()
-        }?.let { Json.decodeFromString<List<T>>(it) } ?: throw IOException("Empty body received")
+        }?.let {
+            try {
+                Json.decodeFromString<List<T>>(it)
+            } catch (exception: SerializationException) {
+                throw IOException("Bad JSON received $exception")
+            } catch (exception: IllegalArgumentException) {
+                throw IOException("Bad type of received body: $exception}")
+            } catch (exception: Exception) {
+                throw IOException("Failed to deserialize: $exception")
+            }
+        } ?: throw IOException("Empty body received")
     }.await()
 }
