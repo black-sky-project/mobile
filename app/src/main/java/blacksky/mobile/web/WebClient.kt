@@ -1,54 +1,14 @@
-package blacksky.mobile.services
+package blacksky.mobile.web
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okio.IOException
-import java.util.*
-
-object UUIDSerializer : KSerializer<UUID> {
-    override val descriptor = PrimitiveSerialDescriptor("UUID", PrimitiveKind.STRING)
-
-    override fun deserialize(decoder: Decoder): UUID {
-        return UUID.fromString(decoder.decodeString())
-    }
-
-    override fun serialize(encoder: Encoder, value: UUID) {
-        encoder.encodeString(value.toString())
-    }
-}
-
-@Serializable
-data class UniversityDto(@Serializable(with = UUIDSerializer::class) val id: UUID, val name: String)
-
-@Serializable
-data class DepartmentDto(
-    @Serializable(with = UUIDSerializer::class) val id: UUID,
-    val name: String,
-    @Serializable(with = UUIDSerializer::class) val universityId: UUID
-)
-
-@Serializable
-enum class DegreeDto { Bachelor, Master }
-
-@Serializable
-data class CourseDto(
-    @Serializable(with = UUIDSerializer::class) val id: UUID,
-    val name: String,
-    val degree: DegreeDto,
-    @Serializable(with = UUIDSerializer::class) val departmentId: UUID
-)
 
 object WebClient {
     private const val BASE_URL = "http://147.45.158.234:8080/api/v1"

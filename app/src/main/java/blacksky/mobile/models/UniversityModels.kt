@@ -1,9 +1,9 @@
 package blacksky.mobile.models
 
-import blacksky.mobile.services.CourseDto
-import blacksky.mobile.services.DegreeDto
-import blacksky.mobile.services.DepartmentDto
-import blacksky.mobile.services.UniversityDto
+import blacksky.mobile.web.CourseDto
+import blacksky.mobile.web.DegreeDto
+import blacksky.mobile.web.DepartmentDto
+import blacksky.mobile.web.UniversityDto
 import java.util.*
 
 interface IId {
