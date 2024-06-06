@@ -19,14 +19,18 @@ data class Student(
     override val id: UUID,
     override val login: String,
     override val name: String,
-    val degree: Degree,
+    val acquiringDegree: Degree,
     val departmentId: UUID
 ) : IUser
 
-fun StudentDto.toModel() = Student(id, login, name, degree.toModel(), departmentId)
+fun StudentDto.toModel() = Student(id, login, name, acquiringDegree.toModel(), departmentId)
 
 data class Mentor(
-    override val id: UUID, override val login: String, override val name: String, val departmentId: UUID
+    override val id: UUID,
+    override val login: String,
+    override val name: String,
+    val departmentId: UUID,
+    val bio: String
 ) : IUser
 
-fun MentorDto.toModel() = Mentor(id, login, name, departmentId)
+fun MentorDto.toModel() = Mentor(id, login, name, departmentId, bio)

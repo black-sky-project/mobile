@@ -26,9 +26,9 @@ object WebClient {
     suspend fun getUniversities() = getList<UniversityDto>("$BASE_URL/universities/get/list")
     suspend fun getDepartments() = getList<DepartmentDto>("$BASE_URL/departments/get/list")
     suspend fun getCourses() = getList<CourseDto>("$BASE_URL/courses/get/list")
-    suspend fun getStudents() = getList<StudentDto>("$BASE_URL/users/get/students")
-    suspend fun getMentors() = getList<MentorDto>("$BASE_URL/users/get/mentors")
-    suspend fun getOffers() = getList<OfferDto>("$BASE_URL/offers/list")
+    suspend fun getStudents() = getList<StudentDto>("$BASE_URL/users/get/list/students")
+    suspend fun getMentors() = getList<MentorDto>("$BASE_URL/users/get/list/mentors")
+    suspend fun getOffers() = getList<OfferDto>("$BASE_URL/offers/get/list")
     suspend fun getMe() = getOne<UserDto>("$BASE_URL/auth/getMe")
 
     suspend fun login(loginDto: LoginDto) = scope.async {
