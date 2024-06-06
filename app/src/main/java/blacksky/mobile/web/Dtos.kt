@@ -40,3 +40,25 @@ data class CourseDto(
     val degree: DegreeDto,
     @Serializable(with = UUIDSerializer::class) val departmentId: UUID
 )
+
+@Serializable
+data class UserDto(
+    @Serializable(with = UUIDSerializer::class) val id: UUID, val login: String, val name: String
+)
+
+@Serializable
+data class StudentDto(
+    @Serializable(with = UUIDSerializer::class) val id: UUID,
+    val login: String,
+    val name: String,
+    val degree: DegreeDto,
+    @Serializable(with = UUIDSerializer::class) val departmentId: UUID
+)
+
+@Serializable
+data class MentorDto(
+    @Serializable(with = UUIDSerializer::class) val id: UUID,
+    val login: String,
+    val name: String,
+    @Serializable(with = UUIDSerializer::class) val departmentId: UUID
+)

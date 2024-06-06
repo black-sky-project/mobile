@@ -47,10 +47,20 @@ internal class CoursesStorage : Storage<Course>() {
     override suspend fun load() = WebClient.getCourses().map { it.toModel() }.let { storeLoaded(it) }
 }
 
+internal class StudentStorage : Storage<Student>() {
+    override suspend fun load() = WebClient.getStudents().map { it.toModel() }.let { storeLoaded(it) }
+}
+
+internal class MentorStorage : Storage<Mentor>() {
+    override suspend fun load() = WebClient.getMentors().map { it.toModel() }.let { storeLoaded(it) }
+}
+
 object DataService {
     private val universityStorage = UniversityStorage()
     private val departmentStorage = DepartmentStorage()
     private val coursesStorage = CoursesStorage()
+    private val studentStorage = StudentStorage()
+    private val mentorStorage = MentorStorage()
 
     suspend fun getUniversities() = universityStorage.getAll()
     suspend fun getUniversityById(id: UUID) = universityStorage.getById(id)
@@ -64,4 +74,14 @@ object DataService {
     suspend fun getCourseById(id: UUID) = coursesStorage.getById(id)
     suspend fun getCoursesByDepartment(departmentId: UUID) =
         coursesStorage.getAll().filter { it.departmentId == departmentId }
+
+    suspend fun getStudents() = studentStorage.getAll()
+    suspend fun getStudentById(id: UUID) = studentStorage.getById(id)
+    suspend fun getStudentsByDepartment(departmentId: UUID) =
+        studentStorage.getAll().filter { it.departmentId == departmentId }
+
+    suspend fun getMentors() = mentorStorage.getAll()
+    suspend fun getMentorById(id: UUID) = mentorStorage.getById(id)
+    suspend fun getMentorsByDepartment(departmentId: UUID) =
+        mentorStorage.getAll().filter { it.departmentId == departmentId }
 }

@@ -18,12 +18,13 @@ object WebClient {
     private val scope = CoroutineScope(Dispatchers.IO + job)
 
     suspend fun getUniversities() = getList<UniversityDto>("$BASE_URL/universities/get/list")
-
     suspend fun getDepartments() = getList<DepartmentDto>("$BASE_URL/departments/get/list")
-
     suspend fun getCourses() = getList<CourseDto>("$BASE_URL/courses/get/list")
+    suspend fun getStudents() = getList<StudentDto>("$BASE_URL/users/get/students")
+    suspend fun getMentors() = getList<MentorDto>("$BASE_URL/users/get/mentors")
+    suspend fun getMe() = getOne<UserDto>("$BASE_URL/auth/getMe")
 
-    private suspend inline fun <reified T: Any> getList(url: String) = scope.async {
+    private suspend inline fun <reified T : Any> getList(url: String) = scope.async {
         val request = Request.Builder().url(url).addHeader("Token", TOKEN).build()
         client.newCall(request).execute().use { response ->
             if (response.isSuccessful.not()) throw IOException("Request failed: $response")
@@ -31,6 +32,24 @@ object WebClient {
         }?.let {
             try {
                 Json.decodeFromString<List<T>>(it)
+            } catch (exception: SerializationException) {
+                throw IOException("Bad JSON received $exception")
+            } catch (exception: IllegalArgumentException) {
+                throw IOException("Bad type of received body: $exception}")
+            } catch (exception: Exception) {
+                throw IOException("Failed to deserialize: $exception")
+            }
+        } ?: throw IOException("Empty body received")
+    }.await()
+
+    private suspend inline fun <reified T : Any> getOne(url: String) = scope.async {
+        val request = Request.Builder().url(url).addHeader("Token", TOKEN).build()
+        client.newCall(request).execute().use { response ->
+            if (response.isSuccessful.not()) throw IOException("Request failed: $response")
+            response.body?.string()
+        }?.let {
+            try {
+                Json.decodeFromString<T>(it)
             } catch (exception: SerializationException) {
                 throw IOException("Bad JSON received $exception")
             } catch (exception: IllegalArgumentException) {
