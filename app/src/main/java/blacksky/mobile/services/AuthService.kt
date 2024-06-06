@@ -14,6 +14,7 @@ object AuthService {
 
     suspend fun login(login: String, password: String) = try {
         WebClient.login(LoginDto(login, password)).also { _token = it }
+        // TODO: Store token
     } catch (exception: BadCredentialsException) {
         _token = null
         throw exception

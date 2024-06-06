@@ -9,6 +9,7 @@ import kotlinx.coroutines.async
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -16,7 +17,7 @@ import okio.IOException
 
 object WebClient {
     private const val BASE_URL = "http://147.45.158.234:8080/api/v1"
-    private const val UNAUTHORIZED = 401
+    private const val FORBIDDEN = 403
 
     private val client = OkHttpClient()
     private val job = SupervisorJob()
@@ -31,11 +32,11 @@ object WebClient {
     suspend fun getMe() = getOne<UserDto>("$BASE_URL/auth/getMe")
 
     suspend fun login(loginDto: LoginDto) = scope.async {
-        val request =
-            Request.Builder().url("$BASE_URL/auth/login").post(Json.encodeToString(loginDto).toRequestBody()).build()
+        val request = Request.Builder().url("$BASE_URL/auth/login")
+            .post(Json.encodeToString(loginDto).toRequestBody("application/json; charset=utf-8".toMediaType())).build()
         client.newCall(request).execute().use { response ->
             if (response.isSuccessful.not()) {
-                if (response.code == UNAUTHORIZED) throw BadCredentialsException("Bad login or password")
+                if (response.code == FORBIDDEN) throw BadCredentialsException("Bad login or password")
                 throw IOException("Request failed: $response")
             }
             response.body?.string()
