@@ -31,6 +31,13 @@ object UUIDSerializer : KSerializer<UUID> {
 @Serializable
 data class UniversityDto(@Serializable(with = UUIDSerializer::class) val id: UUID, val name: String)
 
+@Serializable
+data class DepartmentDto(
+    @Serializable(with = UUIDSerializer::class) val id: UUID,
+    val name: String,
+    @Serializable(with = UUIDSerializer::class) val universityId: UUID
+)
+
 object WebClient {
     private const val BASE_URL = "http://147.45.158.234:8080/api/v1"
     private const val TOKEN = "0d2a4c89-61d9-4dff-af79-ca8b44141a62"
@@ -38,11 +45,15 @@ object WebClient {
     private val job = SupervisorJob()
     private val scope = CoroutineScope(Dispatchers.IO + job)
 
-    suspend fun getUniversities() = scope.async {
-        val request = Request.Builder().url("$BASE_URL/universities/get/list").addHeader("Token", TOKEN).build()
+    suspend fun getUniversities() = getList<UniversityDto>("$BASE_URL/universities/get/list")
+
+    suspend fun getDepartments() = getList<DepartmentDto>("$BASE_URL/departments/get/list")
+
+    private suspend fun <T> getList(url: String) = scope.async {
+        val request = Request.Builder().url(url).addHeader("Token", TOKEN).build()
         client.newCall(request).execute().use { response ->
             if (response.isSuccessful.not()) throw IOException("Request failed: $response")
             response.body?.string()
-        }?.let { Json.decodeFromString<List<UniversityDto>>(it) } ?: throw IOException("Empty body received")
+        }?.let { Json.decodeFromString<List<T>>(it) } ?: throw IOException("Empty body received")
     }.await()
 }

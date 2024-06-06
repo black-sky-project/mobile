@@ -1,5 +1,6 @@
 package blacksky.mobile.services
 
+import blacksky.mobile.models.Department
 import blacksky.mobile.models.IId
 import blacksky.mobile.models.University
 import kotlinx.coroutines.sync.Mutex
@@ -12,9 +13,9 @@ import kotlin.time.TimeSource
 internal abstract class Storage<T> where T : IId {
     private val loadCooldown = 1.minutes
 
-    private val cache = mutableMapOf<UUID, T>()
+    protected val cache = mutableMapOf<UUID, T>()
     private var lastLoad: ComparableTimeMark? = null
-    private val mutex = Mutex()
+    protected val mutex = Mutex()
 
     companion object {
         val timeSource = TimeSource.Monotonic
@@ -39,9 +40,19 @@ internal class UniversityStorage : Storage<University>() {
     override suspend fun load() = WebClient.getUniversities().map { University(it) }.let { storeLoaded(it) }
 }
 
+internal class DepartmentStorage : Storage<Department>() {
+    override suspend fun load() = WebClient.getDepartments().map { Department(it) }.let { storeLoaded(it) }
+}
+
 object DataService {
     private val universityStorage = UniversityStorage()
+    private val departmentStorage = DepartmentStorage()
 
     suspend fun getUniversities() = universityStorage.getAll()
     suspend fun getUniversityById(id: UUID) = universityStorage.getById(id)
+
+    suspend fun getDepartments() = departmentStorage.getAll()
+    suspend fun getDepartmentById(id: UUID) = departmentStorage.getById(id)
+    suspend fun getDepartmentsByUniversity(universityId: UUID) =
+        departmentStorage.getAll().filter { it.universityId == universityId }
 }
