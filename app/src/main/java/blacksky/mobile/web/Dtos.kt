@@ -71,3 +71,6 @@ data class OfferDto(
     val title: String,
     val description: String
 )
+
+@Serializable
+data class LoginDto(val login: String, val password: String)
