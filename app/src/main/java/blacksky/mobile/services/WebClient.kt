@@ -39,6 +39,17 @@ data class DepartmentDto(
     @Serializable(with = UUIDSerializer::class) val universityId: UUID
 )
 
+@Serializable
+enum class DegreeDto { Bachelor, Master }
+
+@Serializable
+data class CourseDto(
+    @Serializable(with = UUIDSerializer::class) val id: UUID,
+    val name: String,
+    val degree: DegreeDto,
+    @Serializable(with = UUIDSerializer::class) val departmentId: UUID
+)
+
 object WebClient {
     private const val BASE_URL = "http://147.45.158.234:8080/api/v1"
     private const val TOKEN = "0d2a4c89-61d9-4dff-af79-ca8b44141a62"
@@ -49,6 +60,8 @@ object WebClient {
     suspend fun getUniversities() = getList<UniversityDto>("$BASE_URL/universities/get/list")
 
     suspend fun getDepartments() = getList<DepartmentDto>("$BASE_URL/departments/get/list")
+
+    suspend fun getCourses() = getList<CourseDto>("$BASE_URL/courses/get/list")
 
     private suspend inline fun <reified T: Any> getList(url: String) = scope.async {
         val request = Request.Builder().url(url).addHeader("Token", TOKEN).build()

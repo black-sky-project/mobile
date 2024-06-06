@@ -1,8 +1,6 @@
 package blacksky.mobile.services
 
-import blacksky.mobile.models.Department
-import blacksky.mobile.models.IId
-import blacksky.mobile.models.University
+import blacksky.mobile.models.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import java.util.*
@@ -13,9 +11,9 @@ import kotlin.time.TimeSource
 internal abstract class Storage<T> where T : IId {
     private val loadCooldown = 1.minutes
 
-    protected val cache = mutableMapOf<UUID, T>()
+    private val cache = mutableMapOf<UUID, T>()
     private var lastLoad: ComparableTimeMark? = null
-    protected val mutex = Mutex()
+    private val mutex = Mutex()
 
     companion object {
         val timeSource = TimeSource.Monotonic
@@ -37,16 +35,21 @@ internal abstract class Storage<T> where T : IId {
 }
 
 internal class UniversityStorage : Storage<University>() {
-    override suspend fun load() = WebClient.getUniversities().map { University(it) }.let { storeLoaded(it) }
+    override suspend fun load() = WebClient.getUniversities().map { it.toModel() }.let { storeLoaded(it) }
 }
 
 internal class DepartmentStorage : Storage<Department>() {
-    override suspend fun load() = WebClient.getDepartments().map { Department(it) }.let { storeLoaded(it) }
+    override suspend fun load() = WebClient.getDepartments().map { it.toModel() }.let { storeLoaded(it) }
+}
+
+internal class CoursesStorage : Storage<Course>() {
+    override suspend fun load() = WebClient.getCourses().map { it.toModel() }.let { storeLoaded(it) }
 }
 
 object DataService {
     private val universityStorage = UniversityStorage()
     private val departmentStorage = DepartmentStorage()
+    private val coursesStorage = CoursesStorage()
 
     suspend fun getUniversities() = universityStorage.getAll()
     suspend fun getUniversityById(id: UUID) = universityStorage.getById(id)
@@ -55,4 +58,9 @@ object DataService {
     suspend fun getDepartmentById(id: UUID) = departmentStorage.getById(id)
     suspend fun getDepartmentsByUniversity(universityId: UUID) =
         departmentStorage.getAll().filter { it.universityId == universityId }
+
+    suspend fun getCourses() = coursesStorage.getAll()
+    suspend fun getCourseById(id: UUID) = coursesStorage.getById(id)
+    suspend fun getCoursesByDepartment(departmentId: UUID) =
+        coursesStorage.getAll().filter { it.departmentId == departmentId }
 }
