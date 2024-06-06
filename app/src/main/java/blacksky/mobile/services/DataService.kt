@@ -80,6 +80,11 @@ object DataService {
     suspend fun getCoursesByDepartment(departmentId: UUID) =
         coursesStorage.getAll().filter { it.departmentId == departmentId }
 
+    suspend fun getMentors() = mentorStorage.getAll()
+    suspend fun getMentorById(id: UUID) = mentorStorage.getById(id)
+    suspend fun getMentorsByDepartment(departmentId: UUID) =
+        mentorStorage.getAll().filter { it.departmentId == departmentId }
+
     suspend fun getStudents() = studentStorage.getAll()
     suspend fun getStudentById(id: UUID) = studentStorage.getById(id)
     suspend fun getStudentsByDepartment(departmentId: UUID) =
