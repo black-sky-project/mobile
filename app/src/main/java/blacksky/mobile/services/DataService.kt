@@ -1,6 +1,7 @@
 package blacksky.mobile.services
 
 import blacksky.mobile.models.*
+import blacksky.mobile.web.PostOfferDto
 import blacksky.mobile.web.WebClient
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -57,6 +58,8 @@ internal class MentorStorage : Storage<Mentor>() {
 
 internal class OfferStorage : Storage<Offer>() {
     override suspend fun load() = WebClient.getOffers().map { it.toModel() }.let { storeLoaded(it) }
+
+    suspend fun postOffer(dto: PostOfferDto) = WebClient.postOffer(dto).also { load() }
 }
 
 object DataService {
@@ -94,4 +97,5 @@ object DataService {
     suspend fun getOfferById(id: UUID) = offerStorage.getById(id)
     suspend fun getOffersByCourse(courseId: UUID) = offerStorage.getAll().filter { it.courseId == courseId }
     suspend fun getOffersByMentor(mentorId: UUID) = offerStorage.getAll().filter { it.mentorId == mentorId }
+    suspend fun postOffer(dto: PostOfferDto) = offerStorage.postOffer(dto)
 }

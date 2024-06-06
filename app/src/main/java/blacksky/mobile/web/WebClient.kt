@@ -43,6 +43,26 @@ object WebClient {
         } ?: throw IOException("Empty body received")
     }.await()
 
+    suspend fun postOffer(dto: PostOfferDto) = scope.async {
+        val request = Request.Builder().url("$BASE_URL/offers/new")
+            .post(Json.encodeToString(dto).toRequestBody("application/json; charset=utf-8".toMediaType()))
+            .addHeader("Token", AuthService.token).build()
+        client.newCall(request).execute().use { response ->
+            if (response.isSuccessful.not()) throw IOException("Request failed: $response")
+            response.body?.string()
+        }?.let {
+            try {
+                Json.decodeFromString<OfferDto>(it)
+            } catch (exception: SerializationException) {
+                throw IOException("Bad JSON received $exception")
+            } catch (exception: IllegalArgumentException) {
+                throw IOException("Bad type of received body: $exception}")
+            } catch (exception: Exception) {
+                throw IOException("Failed to deserialize: $exception")
+            }
+        } ?: throw IOException("Empty body received")
+    }.await()
+
     private suspend inline fun <reified T : Any> getList(url: String) = scope.async {
         val request = Request.Builder().url(url).addHeader("Token", AuthService.token).build()
         client.newCall(request).execute().use { response ->

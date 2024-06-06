@@ -75,3 +75,11 @@ data class OfferDto(
 
 @Serializable
 data class LoginDto(val login: String, val password: String)
+
+@Serializable
+data class PostOfferDto(
+    @Serializable(with = UUIDSerializer::class) val mentorId: UUID,
+    @Serializable(with = UUIDSerializer::class) val courseId: UUID,
+    val title: String,
+    val description: String
+)
