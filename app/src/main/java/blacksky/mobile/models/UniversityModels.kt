@@ -1,9 +1,6 @@
 package blacksky.mobile.models
 
-import blacksky.mobile.web.CourseDto
-import blacksky.mobile.web.DegreeDto
-import blacksky.mobile.web.DepartmentDto
-import blacksky.mobile.web.UniversityDto
+import blacksky.mobile.web.*
 import java.util.*
 
 interface IId {
@@ -28,3 +25,9 @@ fun DegreeDto.toModel() = when (this) {
 data class Course(override val id: UUID, val name: String, val degree: Degree, val departmentId: UUID) : IId
 
 fun CourseDto.toModel() = Course(id, name, degree.toModel(), departmentId)
+
+data class Offer(
+    override val id: UUID, val mentorId: UUID, val courseId: UUID, val title: String, val description: String
+) : IId
+
+fun OfferDto.toModel() = Offer(id, mentorId, courseId, title, description)

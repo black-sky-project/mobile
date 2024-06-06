@@ -23,6 +23,7 @@ object WebClient {
     suspend fun getStudents() = getList<StudentDto>("$BASE_URL/users/get/students")
     suspend fun getMentors() = getList<MentorDto>("$BASE_URL/users/get/mentors")
     suspend fun getMe() = getOne<UserDto>("$BASE_URL/auth/getMe")
+    suspend fun getOffers() = getList<OfferDto>("$BASE_URL/offers/list")
 
     private suspend inline fun <reified T : Any> getList(url: String) = scope.async {
         val request = Request.Builder().url(url).addHeader("Token", TOKEN).build()

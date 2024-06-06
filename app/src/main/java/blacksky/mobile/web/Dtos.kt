@@ -62,3 +62,12 @@ data class MentorDto(
     val name: String,
     @Serializable(with = UUIDSerializer::class) val departmentId: UUID
 )
+
+@Serializable
+data class OfferDto(
+    @Serializable(with = UUIDSerializer::class) val id: UUID,
+    @Serializable(with = UUIDSerializer::class) val mentorId: UUID,
+    @Serializable(with = UUIDSerializer::class) val courseId: UUID,
+    val title: String,
+    val description: String
+)
