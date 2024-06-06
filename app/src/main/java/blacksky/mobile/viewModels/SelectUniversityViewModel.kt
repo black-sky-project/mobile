@@ -3,7 +3,7 @@ package blacksky.mobile.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import blacksky.mobile.models.University
-import blacksky.mobile.services.WebClient
+import blacksky.mobile.services.DataService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,13 +20,13 @@ class SelectUniversityViewModel : ViewModel() {
     val uiState: StateFlow<SelectUniversitiesScreenState> = _uiState.asStateFlow()
 
     init {
-        viewModelScope.launch { updateUniversities() }
+        viewModelScope.launch { loadUniversities() }
     }
 
-    private suspend fun updateUniversities() {
+    private suspend fun loadUniversities() {
         _uiState.update { it.copy(isLoading = true) }
         val universities = try {
-            WebClient.getUniversities().map { University(it) }.also { _uiState.update { it.copy(error = null) } }
+            DataService.getUniversities().also { _uiState.update { it.copy(error = null) } }
         } catch (exception: Exception) {
             _uiState.update { it.copy(error = "$exception") }
             emptyList()
