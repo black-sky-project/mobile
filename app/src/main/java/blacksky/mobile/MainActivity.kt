@@ -8,6 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import blacksky.mobile.navigation.Screens
 import blacksky.mobile.services.AuthService
 import blacksky.mobile.ui.LoginScreen
 import blacksky.mobile.ui.SelectUniversityScreen
@@ -21,8 +25,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             MobileTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    if (AuthService.isAuthenticated()) SelectUniversityScreen()
-                    else LoginScreen()
+                    val navController = rememberNavController()
+                    NavHost(navController = navController, startDestination = Screens.SelectUniversity.route) {
+                        composable(Screens.SelectUniversity.route) { SelectUniversityScreen(navController) }
+                        composable(Screens.Login.route) { LoginScreen(navController) }
+                    }
                 }
             }
         }

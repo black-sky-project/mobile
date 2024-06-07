@@ -13,15 +13,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import blacksky.mobile.navigation.Screens
 import blacksky.mobile.viewModels.SelectUniversityViewModel
 
 @Composable
 @Preview
-fun SelectUniversityScreenPreview() =
-    SelectUniversityScreen(viewModel = viewModel<SelectUniversityViewModel>().apply { setPreviewMode() })
+fun SelectUniversityScreenPreview() = SelectUniversityScreen(navController = rememberNavController(),
+    viewModel = viewModel<SelectUniversityViewModel>().apply { setPreviewMode() })
 
 @Composable
 fun SelectUniversityScreen(
+    navController: NavHostController,
     modifier: Modifier = Modifier,
     viewModel: SelectUniversityViewModel = viewModel(),
 ) {
@@ -46,6 +50,8 @@ fun SelectUniversityScreen(
                 Text(text = "Loading...")
             }
         }
+
+        state.isNeedToAuthorize -> navController.navigate(Screens.Login.route)
 
         else -> LazyColumn(
             modifier = modifier

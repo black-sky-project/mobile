@@ -16,15 +16,23 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import blacksky.mobile.navigation.Screens
 import blacksky.mobile.viewModels.LoginViewModel
 
-@Preview
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier, viewModel: LoginViewModel = viewModel()) {
+@Preview
+fun LoginScreenPreview() = LoginScreen(navController = rememberNavController())
+
+@Composable
+fun LoginScreen(
+    navController: NavHostController, modifier: Modifier = Modifier, viewModel: LoginViewModel = viewModel()
+) {
     val state = viewModel.uiState.collectAsState().value
 
     if (state.authSuccessful) {
-        SelectUniversityScreen()
+        navController.navigate(Screens.SelectUniversity.route)
         return
     }
 

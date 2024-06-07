@@ -3,6 +3,7 @@ package blacksky.mobile.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import blacksky.mobile.models.University
+import blacksky.mobile.services.AuthService
 import blacksky.mobile.services.DataService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +13,10 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 data class SelectUniversitiesScreenState(
-    val universities: List<University> = emptyList(), val error: String? = null, val isLoading: Boolean = false
+    val universities: List<University> = emptyList(),
+    val error: String? = null,
+    val isLoading: Boolean = false,
+    val isNeedToAuthorize: Boolean = false
 )
 
 class SelectUniversityViewModel : ViewModel() {
@@ -25,6 +29,10 @@ class SelectUniversityViewModel : ViewModel() {
 
     private suspend fun loadUniversities() {
         _uiState.update { it.copy(isLoading = true) }
+        if (AuthService.isAuthenticated().not()) {
+            _uiState.update { it.copy(isLoading = false, isNeedToAuthorize = true) }
+            return
+        }
         val universities = try {
             DataService.getUniversities().also { _uiState.update { it.copy(error = null) } }
         } catch (exception: Exception) {
