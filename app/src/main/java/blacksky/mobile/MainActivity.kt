@@ -16,6 +16,7 @@ import androidx.navigation.navArgument
 import blacksky.mobile.navigation.Screens
 import blacksky.mobile.services.AuthService
 import blacksky.mobile.ui.LoginScreen
+import blacksky.mobile.ui.SelectCourseScreen
 import blacksky.mobile.ui.SelectUniversityScreen
 import blacksky.mobile.ui.theme.MobileTheme
 import blacksky.mobile.ui.SelectDepartmentScreen
@@ -44,14 +45,25 @@ class MainActivity : ComponentActivity() {
                             LoginScreen(navController)
                         }
                         composable("${Screens.SelectDepartment.route}/{universityId}") { navBackStackEntry ->
-                            val universityId = navBackStackEntry.arguments?.getString("universityId")?.let {UUID.fromString(it)}
-                                ?: throw IllegalArgumentException("University expected when navigating to departments")
-                            SelectDepartmentScreen(navController = navController, universityId = universityId)
+                            val universityId =
+                                navBackStackEntry.arguments?.getString("universityId")
+                                    ?.let { UUID.fromString(it) }
+                                    ?: throw IllegalArgumentException("University expected when navigating to departments")
+                            SelectDepartmentScreen(
+                                navController = navController,
+                                universityId = universityId
+                            )
                         }
-//                        composable("${Screens.SelectCourse.route}/{departmentId}") { navBackStackEntry ->
-//                            val departmentId = navBackStackEntry.arguments?.getString("departmentId")?.let {UUID.fromString(it)}
-//                                ?: throw IllegalArgumentException("Department expected when navigating to courses")
-//                            SelectCourseScreen(navController = navController, departmentIdId = departmentId)
+                        composable("${Screens.SelectCourse.route}/{departmentId}") { navBackStackEntry ->
+                            val departmentId =
+                                navBackStackEntry.arguments?.getString("departmentId")
+                                    ?.let { UUID.fromString(it) }
+                                    ?: throw IllegalArgumentException("Department expected when navigating to courses")
+                            SelectCourseScreen(
+                                navController = navController,
+                                departmentId = departmentId
+                            )
+                        }
                     }
                 }
             }

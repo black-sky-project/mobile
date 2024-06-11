@@ -15,30 +15,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
+import blacksky.mobile.models.Degree
 import blacksky.mobile.navigation.Screens
-import blacksky.mobile.viewModels.SelectDepartmentViewModel
+import blacksky.mobile.viewModels.SelectCourseViewModel
 import java.util.UUID
+import blacksky.mobile.ui.theme.Purple40
+import blacksky.mobile.ui.theme.Pink40
 
 @Composable
-@Preview
-fun SelectDepartmentScreenPreview() =
-    SelectDepartmentScreen(navController = rememberNavController(),
-        universityId = UUID.randomUUID(),
-        viewModel = viewModel<SelectDepartmentViewModel>().apply { setPreviewMode() })
-
-@Composable
-fun SelectDepartmentScreen(
+fun SelectCourseScreen(
     navController: NavHostController,
-    universityId: UUID,
+    departmentId: UUID,
     modifier: Modifier = Modifier,
-    viewModel: SelectDepartmentViewModel = viewModel()
+    viewModel: SelectCourseViewModel = viewModel()
 ) {
-    viewModel.launch(universityId)
+    viewModel.launch(departmentId)
     val state = viewModel.uiState.collectAsState().value
     when {
         state.error != null -> {
@@ -71,7 +66,7 @@ fun SelectDepartmentScreen(
             verticalArrangement = Arrangement.SpaceAround,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            items(state.departments) {
+            items(state.courses) {
                 Card(
                     modifier = modifier
                         .padding(vertical = 5.dp)
@@ -80,7 +75,13 @@ fun SelectDepartmentScreen(
                                 "${Screens.SelectCourse.route}/${it.id}"
                             )
                         },
-                    elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
+                    elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = when (it.degree) {
+                            Degree.Bachelor -> Pink40
+                            Degree.Master -> Purple40
+                        }
+                    )
                 ) {
                     Text(
                         modifier = modifier
