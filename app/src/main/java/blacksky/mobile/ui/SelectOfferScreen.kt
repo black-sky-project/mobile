@@ -20,19 +20,20 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import blacksky.mobile.models.Degree
 import blacksky.mobile.navigation.Screens
-import blacksky.mobile.viewModels.SelectCourseViewModel
-import java.util.UUID
-import blacksky.mobile.ui.theme.Purple40
 import blacksky.mobile.ui.theme.Pink40
+import blacksky.mobile.ui.theme.Purple40
+import blacksky.mobile.viewModels.SelectCourseViewModel
+import blacksky.mobile.viewModels.SelectOfferViewModel
+import java.util.UUID
 
 @Composable
-fun SelectCourseScreen(
+fun SelectOfferScreen(
     navController: NavHostController,
-    departmentId: UUID,
+    courseId: UUID,
     modifier: Modifier = Modifier,
-    viewModel: SelectCourseViewModel = viewModel()
+    viewModel: SelectOfferViewModel = viewModel()
 ) {
-    viewModel.launch(departmentId)
+    viewModel.launch(courseId)
     val state = viewModel.uiState.collectAsState().value
     when {
         state.error != null -> {
@@ -65,7 +66,7 @@ fun SelectCourseScreen(
             verticalArrangement = Arrangement.SpaceAround,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            items(state.courses) {
+            items(state.offers) {
                 Card(
                     modifier = modifier
                         .padding(vertical = 5.dp)
@@ -74,18 +75,12 @@ fun SelectCourseScreen(
                                 "${Screens.SelectOffer.route}/${it.id}"
                             )
                         },
-                    elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = when (it.degree) {
-                            Degree.Bachelor -> Pink40
-                            Degree.Master -> Purple40
-                        }
-                    )
+                    elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
                 ) {
                     Text(
                         modifier = modifier
                             .fillMaxWidth()
-                            .padding(15.dp), text = it.name
+                            .padding(15.dp), text = it.title
                     )
                 }
             }

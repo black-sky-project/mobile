@@ -4,5 +4,6 @@ enum class Screens(val route: String) {
     Login("login"),
     SelectUniversity("universities"),
     SelectDepartment("departments"),
-    SelectCourse("courses")
+    SelectCourse("courses"),
+    SelectOffer("offers")
 }

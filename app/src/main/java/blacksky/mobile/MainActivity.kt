@@ -20,13 +20,13 @@ import blacksky.mobile.ui.SelectCourseScreen
 import blacksky.mobile.ui.SelectUniversityScreen
 import blacksky.mobile.ui.theme.MobileTheme
 import blacksky.mobile.ui.SelectDepartmentScreen
+import blacksky.mobile.ui.SelectOfferScreen
 import java.util.UUID
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AuthService.init(getPreferences(Context.MODE_PRIVATE))
-
         setContent {
             MobileTheme {
                 Surface(
@@ -62,6 +62,16 @@ class MainActivity : ComponentActivity() {
                             SelectCourseScreen(
                                 navController = navController,
                                 departmentId = departmentId
+                            )
+                        }
+                        composable("${Screens.SelectOffer.route}/{courseId}"){ navBackStackEntry ->
+                            val courseId =
+                                navBackStackEntry.arguments?.getString("courseId")
+                                    ?.let { UUID.fromString(it) }
+                                    ?: throw IllegalArgumentException("Course expected when navigating to offers")
+                            SelectOfferScreen(
+                                navController = navController,
+                                courseId = courseId
                             )
                         }
                     }
