@@ -128,6 +128,11 @@ fun OfferInfoScreen(
                         modifier = modifier
                             .weight(1f)
                             .padding(end = 2.dp)
+                            .clickable {
+                                navController.navigate(
+                                    "${Screens.MentorInfo.route}/${state.mentor?.id}"
+                                )
+                            }
                     ) {
                         Text(
                             modifier = modifier.padding(vertical = 5.dp, horizontal = 10.dp),
@@ -151,7 +156,5 @@ fun OfferInfoScreen(
                 }
             }
         }
-
-
     }
 }

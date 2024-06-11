@@ -16,6 +16,7 @@ import androidx.navigation.navArgument
 import blacksky.mobile.navigation.Screens
 import blacksky.mobile.services.AuthService
 import blacksky.mobile.ui.LoginScreen
+import blacksky.mobile.ui.MentorInfoScreen
 import blacksky.mobile.ui.OfferInfoScreen
 import blacksky.mobile.ui.SelectCourseScreen
 import blacksky.mobile.ui.SelectUniversityScreen
@@ -83,6 +84,16 @@ class MainActivity : ComponentActivity() {
                             OfferInfoScreen(
                                 navController = navController,
                                 offerId = offerId
+                            )
+                        }
+                        composable("${Screens.MentorInfo.route}/{mentorId}") { navBackStackEntry ->
+                            val mentorId =
+                                navBackStackEntry.arguments?.getString("mentorId")
+                                    ?.let { UUID.fromString(it) }
+                                    ?: throw IllegalArgumentException("Mentor expected when navigating to mentorInfo")
+                            MentorInfoScreen(
+                                navController = navController,
+                                mentorId = mentorId
                             )
                         }
                     }
