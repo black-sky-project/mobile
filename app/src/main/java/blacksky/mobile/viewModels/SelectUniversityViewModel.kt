@@ -2,7 +2,9 @@ package blacksky.mobile.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import blacksky.mobile.models.University
+import blacksky.mobile.navigation.Screens
 import blacksky.mobile.services.AuthService
 import blacksky.mobile.services.DataService
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -11,7 +11,11 @@ interface IUser : IId {
     val name: String
 }
 
-data class User(override val id: UUID, override val login: String, override val name: String) : IUser
+data class User(
+    override val id: UUID,
+    override val login: String,
+    override val name: String
+) : IUser
 
 fun UserDto.toModel() = User(id, login, name)
 

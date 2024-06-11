@@ -1,7 +1,11 @@
 package blacksky.mobile.ui
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
@@ -17,20 +21,24 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import blacksky.mobile.navigation.Screens
-import blacksky.mobile.viewModels.SelectUniversityViewModel
+import blacksky.mobile.viewModels.SelectDepartmentViewModel
+import java.util.UUID
 
 @Composable
 @Preview
-fun SelectUniversityScreenPreview() =
-    SelectUniversityScreen(navController = rememberNavController(),
-        viewModel = viewModel<SelectUniversityViewModel>().apply { setPreviewMode() })
+fun SelectDepartmentScreenPreview() =
+    SelectDepartmentScreen(navController = rememberNavController(),
+        universityId = UUID.randomUUID(),
+        viewModel = viewModel<SelectDepartmentViewModel>().apply { setPreviewMode() })
 
 @Composable
-fun SelectUniversityScreen(
+fun SelectDepartmentScreen(
     navController: NavHostController,
+    universityId: UUID,
     modifier: Modifier = Modifier,
-    viewModel: SelectUniversityViewModel = viewModel()
+    viewModel: SelectDepartmentViewModel = viewModel()
 ) {
+    viewModel.launch(universityId)
     val state = viewModel.uiState.collectAsState().value
     when {
         state.error != null -> {
@@ -63,7 +71,7 @@ fun SelectUniversityScreen(
             verticalArrangement = Arrangement.SpaceAround,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            items(state.universities) {
+            items(state.departments) {
                 Card(
                     modifier = modifier
                         .padding(vertical = 5.dp)

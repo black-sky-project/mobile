@@ -7,11 +7,18 @@ interface IId {
     val id: UUID
 }
 
-data class University(override val id: UUID, val name: String) : IId
+data class University(
+    override val id: UUID,
+    val name: String
+) : IId
 
 fun UniversityDto.toModel() = University(id, name)
 
-data class Department(override val id: UUID, val name: String, val universityId: UUID) : IId
+data class Department(
+    override val id: UUID,
+    val name: String,
+    val universityId: UUID
+) : IId
 
 fun DepartmentDto.toModel() = Department(id, name, universityId)
 

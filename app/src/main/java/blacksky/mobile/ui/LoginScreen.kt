@@ -27,7 +27,9 @@ fun LoginScreenPreview() = LoginScreen(navController = rememberNavController())
 
 @Composable
 fun LoginScreen(
-    navController: NavHostController, modifier: Modifier = Modifier, viewModel: LoginViewModel = viewModel()
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+    viewModel: LoginViewModel = viewModel()
 ) {
     val state = viewModel.uiState.collectAsState().value
 
