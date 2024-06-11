@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import blacksky.mobile.navigation.Screens
 import blacksky.mobile.services.AuthService
+import blacksky.mobile.ui.CreateOfferScreen
 import blacksky.mobile.ui.LoginScreen
 import blacksky.mobile.ui.MentorInfoScreen
 import blacksky.mobile.ui.OfferInfoScreen
@@ -94,6 +95,16 @@ class MainActivity : ComponentActivity() {
                             MentorInfoScreen(
                                 navController = navController,
                                 mentorId = mentorId
+                            )
+                        }
+                        composable("${Screens.CreateOffer.route}/{courseId}"){ navBackStackEntry ->
+                            val courseId =
+                                navBackStackEntry.arguments?.getString("courseId")
+                                    ?.let { UUID.fromString(it) }
+                                    ?: throw IllegalArgumentException("Course expected when navigating to offer creating")
+                            CreateOfferScreen(
+                                navController = navController,
+                                courseId = courseId
                             )
                         }
                     }

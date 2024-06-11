@@ -5,7 +5,9 @@ import androidx.lifecycle.viewModelScope
 import blacksky.mobile.models.Course
 import blacksky.mobile.models.Offer
 import blacksky.mobile.services.AuthService
+import blacksky.mobile.services.AuthService.getMe
 import blacksky.mobile.services.DataService
+import blacksky.mobile.services.DataService.getMentorById
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +20,8 @@ data class SelectOffersScreenState(
     val error: String? = null,
     val isLoading: Boolean = false,
     val isNeedToAuthorize: Boolean = false,
-    val courseId: UUID? = null
+    val courseId: UUID? = null,
+    val amMentor: Boolean = false
 )
 
 class SelectOfferViewModel : ViewModel() {
@@ -46,6 +49,9 @@ class SelectOfferViewModel : ViewModel() {
             _uiState.update { it.copy(error = "$exception") }
             emptyList()
         }
-        _uiState.update { it.copy(offers = offers, isLoading = false) }
+        val amMentor = getMe().let {
+            (getMentorById(it.id) != null)
+        }
+        _uiState.update { it.copy(offers = offers, amMentor = amMentor, isLoading = false) }
     }
 }

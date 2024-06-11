@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -84,6 +85,24 @@ fun SelectOfferScreen(
                         text = it.title
                     )
                 }
+                if (state.amMentor)
+                    Card(
+                        modifier = modifier
+                            .padding(vertical = 5.dp)
+                            .clickable {
+                                navController.navigate(
+                                    "${Screens.CreateOffer.route}/${state.courseId}"
+                                )
+                            },
+                        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
+                        colors = CardDefaults.cardColors(containerColor = Pink40)
+                    ) {
+                        Text(
+                            modifier = modifier
+                                .padding(15.dp),
+                            text = "Create Offer"
+                        )
+                    }
             }
         }
     }
