@@ -72,7 +72,7 @@ fun SelectOfferScreen(
                         .padding(vertical = 5.dp)
                         .clickable {
                             navController.navigate(
-                                "${Screens.SelectOffer.route}/${it.id}"
+                                "${Screens.OfferInfo.route}/${it.id}"
                             )
                         },
                     elevation = CardDefaults.cardElevation(defaultElevation = 5.dp)
@@ -80,7 +80,8 @@ fun SelectOfferScreen(
                     Text(
                         modifier = modifier
                             .fillMaxWidth()
-                            .padding(15.dp), text = it.title
+                            .padding(15.dp),
+                        text = it.title
                     )
                 }
             }

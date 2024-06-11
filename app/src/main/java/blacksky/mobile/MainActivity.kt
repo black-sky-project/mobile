@@ -16,6 +16,7 @@ import androidx.navigation.navArgument
 import blacksky.mobile.navigation.Screens
 import blacksky.mobile.services.AuthService
 import blacksky.mobile.ui.LoginScreen
+import blacksky.mobile.ui.OfferInfoScreen
 import blacksky.mobile.ui.SelectCourseScreen
 import blacksky.mobile.ui.SelectUniversityScreen
 import blacksky.mobile.ui.theme.MobileTheme
@@ -64,7 +65,7 @@ class MainActivity : ComponentActivity() {
                                 departmentId = departmentId
                             )
                         }
-                        composable("${Screens.SelectOffer.route}/{courseId}"){ navBackStackEntry ->
+                        composable("${Screens.SelectOffer.route}/{courseId}") { navBackStackEntry ->
                             val courseId =
                                 navBackStackEntry.arguments?.getString("courseId")
                                     ?.let { UUID.fromString(it) }
@@ -72,6 +73,16 @@ class MainActivity : ComponentActivity() {
                             SelectOfferScreen(
                                 navController = navController,
                                 courseId = courseId
+                            )
+                        }
+                        composable("${Screens.OfferInfo.route}/{offerId}") { navBackStackEntry ->
+                            val offerId =
+                                navBackStackEntry.arguments?.getString("offerId")
+                                    ?.let { UUID.fromString(it) }
+                                    ?: throw IllegalArgumentException("Offer expected when navigating to offerInfo")
+                            OfferInfoScreen(
+                                navController = navController,
+                                offerId = offerId
                             )
                         }
                     }
