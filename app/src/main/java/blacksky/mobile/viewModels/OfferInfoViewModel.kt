@@ -27,8 +27,9 @@ class OfferInfoViewModel : ViewModel() {
     val uiState: StateFlow<OfferInfoScreenState> = _uiState.asStateFlow()
 
     fun launch(offerId: UUID) {
-        _uiState.update { it.copy(offerId = offerId) }
-        viewModelScope.launch { loadOfferInfo() }
+        viewModelScope.launch {
+            _uiState.update { it.copy(offerId = offerId) }
+            loadOfferInfo() }
     }
 
     private suspend fun loadOfferInfo() {

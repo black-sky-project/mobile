@@ -38,8 +38,10 @@ class CreateOfferViewModel : ViewModel() {
         _uiState.update { it.copy(offerDescription = newDescriptionString) }
 
     fun launch(courseId: UUID) {
-        _uiState.update { it.copy(courseId = courseId) }
-        viewModelScope.launch { loadMentorId() }
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(courseId = courseId) }
+            loadMentorId() }
     }
 
     fun login() {

@@ -26,8 +26,9 @@ class SelectDepartmentViewModel : ViewModel() {
     val uiState: StateFlow<SelectDepartmentsScreenState> = _uiState.asStateFlow()
 
     fun launch(universityId: UUID) {
-        _uiState.update { it.copy(universityId = universityId) }
-        viewModelScope.launch { loadDepartments() }
+        viewModelScope.launch {
+            _uiState.update { it.copy(universityId = universityId) }
+            loadDepartments() }
     }
 
     private suspend fun loadDepartments() {

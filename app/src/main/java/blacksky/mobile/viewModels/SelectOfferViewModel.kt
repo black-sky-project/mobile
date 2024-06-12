@@ -29,8 +29,10 @@ class SelectOfferViewModel : ViewModel() {
     val uiState: StateFlow<SelectOffersScreenState> = _uiState.asStateFlow()
 
     fun launch(courseId: UUID) {
-        _uiState.update { it.copy(courseId = courseId) }
-        viewModelScope.launch { loadOffers() }
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(courseId = courseId) }
+            loadOffers() }
     }
 
     private suspend fun loadOffers() {

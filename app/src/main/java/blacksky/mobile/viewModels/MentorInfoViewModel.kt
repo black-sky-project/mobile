@@ -26,8 +26,10 @@ class MentorInfoViewModel : ViewModel() {
     val uiState: StateFlow<MentorInfoScreenState> = _uiState.asStateFlow()
 
     fun launch(mentorId: UUID) {
-        _uiState.update { it.copy(mentorId = mentorId) }
-        viewModelScope.launch { loadMentorInfo() }
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(mentorId = mentorId) }
+            loadMentorInfo() }
     }
 
     private suspend fun loadMentorInfo() {
