@@ -32,7 +32,6 @@ class SelectDepartmentViewModel : ViewModel() {
     }
 
     private suspend fun loadDepartments() {
-        _uiState.update { it.copy(isLoading = true) }
         if (AuthService.isAuthenticated().not()) {
             _uiState.update { it.copy(isLoading = false, isNeedToAuthorize = true) }
             return

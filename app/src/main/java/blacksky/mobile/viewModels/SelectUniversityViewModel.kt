@@ -30,7 +30,6 @@ class SelectUniversityViewModel : ViewModel() {
     }
 
     private suspend fun loadUniversities() {
-        _uiState.update { it.copy(isLoading = true) }
         if (AuthService.isAuthenticated().not()) {
             _uiState.update { it.copy(isLoading = false, isNeedToAuthorize = true) }
             return

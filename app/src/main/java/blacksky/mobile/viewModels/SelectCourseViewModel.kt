@@ -33,7 +33,6 @@ class SelectCourseViewModel : ViewModel() {
     }
 
     private suspend fun loadCourses() {
-        _uiState.update { it.copy(isLoading = true) }
         if (AuthService.isAuthenticated().not()) {
             _uiState.update { it.copy(isLoading = false, isNeedToAuthorize = true) }
             return

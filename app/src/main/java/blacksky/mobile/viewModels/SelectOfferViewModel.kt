@@ -36,7 +36,6 @@ class SelectOfferViewModel : ViewModel() {
     }
 
     private suspend fun loadOffers() {
-        _uiState.update { it.copy(isLoading = true) }
         if (AuthService.isAuthenticated().not()) {
             _uiState.update { it.copy(isLoading = false, isNeedToAuthorize = true) }
             return
