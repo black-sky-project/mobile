@@ -49,8 +49,11 @@ class SelectOfferViewModel : ViewModel() {
             _uiState.update { it.copy(error = "$exception") }
             emptyList()
         }
-        val amMentor = getMe().let {
-            (getMentorById(it.id) != null)
+        val amMentor = try {
+            getMe().let { (getMentorById(it.id) != null) }
+        } catch (exception: Exception) {
+            _uiState.update { it.copy(error = "$exception") }
+            false
         }
         _uiState.update { it.copy(offers = offers, amMentor = amMentor, isLoading = false) }
     }

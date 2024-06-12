@@ -85,7 +85,7 @@ fun SelectOfferScreen(
                         text = it.title
                     )
                 }
-                if (state.amMentor)
+                if (!state.amMentor)
                     Card(
                         modifier = modifier
                             .padding(vertical = 5.dp)
